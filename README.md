@@ -1,16 +1,51 @@
 # Obat — Ooredoo Business AI Assistant
 
-Bilingual (English / Arabic, RTL) customer-service chatbot for Ooredoo B2B SME
-support. Built for the Ooredoo Enterprise AI hackathon.
+> 🏆 **Hackathon submission** for the Ooredoo Enterprise AI use case
+> *(B2B SME AI Assistant)*. Bilingual (English / Arabic with RTL) customer-service
+> chatbot built in 24 hours.
 
-- React 18 + Vite 6 + Tailwind CSS v4
-- Radix UI / shadcn primitives, sonner toasts, lucide-react icons
-- Pluggable chat service: connects to the hackathon FastAPI backend
-  (`/chat/respond`) when reachable, falls back to a built-in bilingual mock
-  otherwise so the demo always works.
-- Full RTL layout, Noto Kufi Arabic font, language toggle persisted to
-  `localStorage`, intent insights, quick replies, offer cards, message
-  feedback, escalation modal.
+A React + Vite + Tailwind front-end wired to a FastAPI / sentence-transformers
+back-end. Designed to demo Ooredoo's path to a production-grade, multilingual
+B2B support assistant on top of their existing CRM, ticket, product catalog,
+and FAQ data.
+
+![status](https://img.shields.io/badge/status-hackathon%20demo-red)
+![lang](https://img.shields.io/badge/i18n-EN%20%7C%20AR%20(RTL)-blue)
+![stack](https://img.shields.io/badge/stack-React%20%7C%20Vite%20%7C%20Tailwind-informational)
+
+---
+
+## What's in this repo
+
+This repository contains **only the front-end** of the Obat assistant — the
+React UI, bilingual i18n + RTL layer, and the chat service abstraction that
+talks to the hackathon back-end.
+
+The back-end (vector store, intent classifier, FastAPI service) and the
+hackathon dataset (CRM SQL, tickets, products, maintenance, FAQs) are **not**
+part of this repo — they're distributed separately by the hackathon organizers.
+
+If the back-end isn't reachable, the front-end falls back to a built-in
+bilingual mock service so the demo always works.
+
+## Hackathon features
+
+- 🌐 **Bilingual EN / AR** with full RTL mirror, Noto Kufi Arabic font, and
+  persisted language preference
+- 💬 **Real-time chat** with typing indicator, auto-scroll, and message
+  timestamps
+- 🧠 **Intent insights chip** showing classified intent + confidence + the
+  recommended action (solve / escalate / upgrade / inform)
+- ⚡ **Contextual quick-reply chips** that refresh per intent so demos feel
+  scripted
+- 🎟️ **Escalation modal** with SLA-aware copy (Gold / Silver / Bronze /
+  Platinum) and impact selection
+- 📈 **Upsell offer card** with multi-term pricing (12 / 24 / 36 months) from
+  the product catalog
+- 👍 **Thumbs up / down feedback** on every bot message
+- 🛟 **Graceful fallback**: if the back-end is unreachable, a built-in mock
+  intent engine answers in both languages so the demo never breaks
+- 🧪 **Guest session ID** generated on load (no auth required for the demo)
 
 ## Run it
 
@@ -21,19 +56,40 @@ npm run dev
 
 Open the URL Vite prints (usually `http://localhost:5173/`).
 
-### Optional: point at the real ML backend
+### Optional — connect the real ML back-end
 
 ```bash
 cp .env.example .env.local
-# .env.local already contains:
+# .env.local will contain:
 # VITE_API_BASE_URL=http://127.0.0.1:8787
 ```
 
-If `VITE_API_BASE_URL` is set and the server responds on `/health`, the chat
-hits the real classifier + vector store. Otherwise the bundled mock kicks in.
+If `VITE_API_BASE_URL` is set and `/health` responds, the chat hits the real
+sentence-transformers retriever + scikit-learn intent classifier. Otherwise
+the bundled mock kicks in.
 
-See the hackathon dataset's `docs/AI_ASSISTANT_RUNBOOK.md` for instructions on
-booting the FastAPI service.
+See `docs/AI_ASSISTANT_RUNBOOK.md` in the hackathon dataset for instructions
+on booting the FastAPI service, building the vector store, and training the
+intent classifier.
+
+## Security & privacy
+
+This repo is safe to publish publicly:
+
+- **No API keys, tokens, or credentials** are required by this front-end.
+  The demo runs against a localhost back-end (or the bundled mock).
+- `.env.local` (any local configuration) is git-ignored — only the
+  `.env.example` template is committed and it contains a placeholder
+  localhost URL.
+- **No customer data** is bundled. The hackathon CRM SQL, tickets,
+  maintenance records, and FAQs live in a separate distribution and are
+  ignored by `.gitignore`.
+- No auth flow, no PII collection, no analytics. Guest session IDs are
+  generated client-side and used only for the demo.
+
+If you fork this for your own backend that does require auth, **never** put
+keys in source — use `.env.local` (already git-ignored) or your hosting
+provider's secret manager.
 
 ## Project layout
 
@@ -47,7 +103,7 @@ src/
       mobile/MobileChatView.tsx   # Mobile chat view
       desktop/DesktopDashboard.tsx# Desktop 3-panel dashboard
       shared/                     # WelcomeScreen, QuickReplies, LanguageToggle, ...
-      ui/                         # shadcn/Radix primitives
+      ui/                         # shadcn / Radix primitives
   services/
     chatService.ts                # Real API + mock fallback
     mockKnowledge.ts              # Bilingual intent rules
@@ -55,23 +111,23 @@ src/
   styles/                         # Tailwind entry + globals + theme
 ```
 
-## Features
-
-- Real-time messaging with typing indicator + auto-scroll
-- Bilingual welcome screen with 5 topic cards
-- Contextual quick-reply chips per intent (refresh on every bot turn)
-- AI Insights chip showing intent + confidence + recommended action
-- Offer card + upgrade sheet (24/36-month pricing tiers)
-- Escalation modal with SLA-aware copy
-- Thumbs up/down feedback on every bot message
-- Error banner with retry on API failure
-- AR/EN language toggle with RTL mirror + Noto Kufi Arabic font
-- Guest session ID generated on load
-- Configurable backend via `VITE_API_BASE_URL`, mock fallback baked in
-
 ## Scripts
 
 | Command | What it does |
 | --- | --- |
 | `npm run dev` | Vite dev server |
 | `npm run build` | Production build into `dist/` |
+
+## Tech stack
+
+- React 18, Vite 6, TypeScript 5
+- Tailwind CSS v4 + tw-animate-css
+- Radix UI + shadcn primitives, sonner toasts, lucide-react icons
+- Custom bilingual i18n context with RTL handling
+- FastAPI + sentence-transformers + scikit-learn back-end (separate repo)
+
+## Credits
+
+Built for the Ooredoo Enterprise AI hackathon. UI scaffold exported from
+Figma Make; functionality, bilingual layer, chat service, and back-end
+integration implemented in this repo.
