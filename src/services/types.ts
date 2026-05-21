@@ -101,9 +101,16 @@ export interface CustomerProfile {
   cityAr: string;
 }
 
+export interface ConversationTurn {
+  role: MessageRole;
+  text: string;
+  intent?: IntentType;
+}
+
 export interface SendMessageOptions {
   text: string;
   language: Language;
   sessionId: string;
   customer: CustomerProfile;
+  history?: ConversationTurn[];
 }

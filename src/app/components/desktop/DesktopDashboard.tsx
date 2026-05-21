@@ -22,6 +22,7 @@ import {
 } from '../../../services/chatService';
 import type {
   ChatMessage,
+  ConversationTurn,
   IntentInfo,
   OfferSuggestion,
   QuickReply,
@@ -109,12 +110,19 @@ export function DesktopDashboard() {
       setIsTyping(true);
       setActiveQuickReplies([]);
 
+      const history: ConversationTurn[] = messages.map((m) => ({
+        role: m.role,
+        text: m.textEn,
+        intent: m.meta?.intent?.issueType,
+      }));
+
       try {
         const response = await sendMessage({
           text,
           language,
           sessionId: sessionIdRef.current,
           customer,
+          history,
         });
         setIsTyping(false);
 
@@ -125,6 +133,13 @@ export function DesktopDashboard() {
           textAr: response.textAr,
           timestamp: formatTimestamp(new Date(), language),
           status: 'sent',
+          meta: {
+            intent: response.intent,
+            action: response.action,
+            quickReplies: response.quickReplies,
+            offer: response.offer,
+            escalation: response.escalation,
+          },
         });
 
         setActiveIntent(response.intent);
@@ -157,7 +172,7 @@ export function DesktopDashboard() {
         });
       }
     },
-    [appendMessage, customer, isArabic, language],
+    [appendMessage, customer, isArabic, language, messages],
   );
 
   const handleQuickReply = (reply: QuickReply) => {

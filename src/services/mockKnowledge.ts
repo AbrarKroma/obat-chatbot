@@ -20,6 +20,14 @@ export interface IntentRule {
   quickReplies: QuickReply[];
   offer?: OfferSuggestion;
   references: Reference[];
+  followUp?: {
+    responseEn: string;
+    responseAr: string;
+    action?: RecommendedAction;
+    actionLabel?: string;
+    actionLabelAr?: string;
+    quickReplies?: QuickReply[];
+  };
 }
 
 export const INTENT_RULES: IntentRule[] = [
@@ -109,6 +117,38 @@ export const INTENT_RULES: IntentRule[] = [
           'Step 1: Verify all cables are properly connected and router LEDs are lit. Step 2: Power-cycle the router (30 seconds). Step 3: Check whether other office devices are affected. Step 4: Verify account is not on payment hold.',
       },
     ],
+    followUp: {
+      responseEn:
+        "Thanks for trying that. Since the issue persists, I'm escalating this as a priority incident under your Gold SLA. A field technician will be dispatched within 4 hours and you'll receive an SMS with the ticket number. Would you also like me to loop in a live agent now?",
+      responseAr:
+        'شكراً على المحاولة. بما أن المشكلة لا تزال قائمة، سأقوم بتصعيدها كحادثة ذات أولوية وفق مستوى الخدمة الذهبي. سيتم إرسال فني ميداني خلال 4 ساعات وستصلك رسالة نصية برقم التذكرة. هل تريد أيضاً التحدث مع وكيل مباشر الآن؟',
+      action: 'escalate',
+      actionLabel: 'Dispatch Technician',
+      actionLabelAr: 'إرسال فني',
+      quickReplies: [
+        {
+          id: 'qr-conn-fu-1',
+          label: 'Yes, connect me to an agent',
+          labelAr: 'نعم، حولني إلى وكيل',
+          payload: 'Yes please connect me to a live agent',
+          payloadAr: 'نعم، يرجى تحويلي إلى وكيل مباشر',
+        },
+        {
+          id: 'qr-conn-fu-2',
+          label: 'Confirm the ticket',
+          labelAr: 'تأكيد التذكرة',
+          payload: 'Please confirm the support ticket has been opened',
+          payloadAr: 'يرجى تأكيد فتح تذكرة الدعم',
+        },
+        {
+          id: 'qr-conn-fu-3',
+          label: 'Share ETA on site',
+          labelAr: 'أرسل الوقت المتوقع للوصول',
+          payload: 'When will the technician arrive on site?',
+          payloadAr: 'متى سيصل الفني إلى الموقع؟',
+        },
+      ],
+    },
   },
   {
     intent: 'billing',
@@ -179,6 +219,31 @@ export const INTENT_RULES: IntentRule[] = [
           'Typical billing resolutions: resend invoice to verified email, issue credit on confirmed errors, configure auto-pay via business portal.',
       },
     ],
+    followUp: {
+      responseEn:
+        "Understood - let me dig deeper. I've opened a billing review (case BIL-INQ-${TICKET}) and routed it to our Business Billing Desk. They typically respond within one business day. Meanwhile, can you tell me which specific charge or invoice line is in question?",
+      responseAr:
+        'مفهوم - دعني أتعمق أكثر. لقد فتحت مراجعة فوترة (الحالة BIL-INQ-${TICKET}) وحولتها إلى مكتب فوترة الأعمال. عادةً ما يستجيبون خلال يوم عمل واحد. في هذه الأثناء، أخبرني أي رسم أو بند في الفاتورة موضع الاستفسار؟',
+      action: 'escalate',
+      actionLabel: 'Escalate to Billing',
+      actionLabelAr: 'تصعيد إلى الفوترة',
+      quickReplies: [
+        {
+          id: 'qr-bill-fu-1',
+          label: 'Disputed charge details',
+          labelAr: 'تفاصيل الرسم المتنازع عليه',
+          payload: 'The disputed charge is the recurring monthly fee',
+          payloadAr: 'الرسم المتنازع عليه هو الرسم الشهري المتكرر',
+        },
+        {
+          id: 'qr-bill-fu-2',
+          label: 'Talk to billing agent',
+          labelAr: 'التحدث مع وكيل فوترة',
+          payload: 'I want to talk to a billing agent now',
+          payloadAr: 'أريد التحدث مع وكيل فوترة الآن',
+        },
+      ],
+    },
   },
   {
     intent: 'cloud',
@@ -254,6 +319,31 @@ export const INTENT_RULES: IntentRule[] = [
           'Validate cloud resources, backup schedules, retention policies, and access roles before escalating to L2.',
       },
     ],
+    followUp: {
+      responseEn:
+        "Got it. I'm pulling the backup logs and resource metrics into a Cloud Ops case for L2 to investigate. To narrow this down, can you share the VM or workload ID and the approximate time the issue started?",
+      responseAr:
+        'تمام. أقوم بسحب سجلات النسخ الاحتياطي ومقاييس الموارد إلى حالة عمليات سحابية ليبحث فيها فريق المستوى الثاني. لتضييق نطاق المشكلة، هل يمكنك مشاركة معرّف الخادم الافتراضي والوقت التقريبي لبدء المشكلة؟',
+      action: 'escalate',
+      actionLabel: 'Escalate to Cloud Ops',
+      actionLabelAr: 'تصعيد إلى عمليات السحابة',
+      quickReplies: [
+        {
+          id: 'qr-cloud-fu-1',
+          label: 'Share VM ID',
+          labelAr: 'مشاركة معرف الخادم',
+          payload: 'The affected VM ID is VM-PROD-0021',
+          payloadAr: 'معرف الخادم المتأثر هو VM-PROD-0021',
+        },
+        {
+          id: 'qr-cloud-fu-2',
+          label: 'Talk to a cloud engineer',
+          labelAr: 'التحدث إلى مهندس سحابة',
+          payload: 'I want to talk to a cloud engineer',
+          payloadAr: 'أريد التحدث إلى مهندس سحابة',
+        },
+      ],
+    },
   },
   {
     intent: 'iot',
@@ -321,6 +411,31 @@ export const INTENT_RULES: IntentRule[] = [
         text: 'GPS inaccuracies are commonly resolved by firmware update + position recalibration.',
       },
     ],
+    followUp: {
+      responseEn:
+        "Thanks for the update. Since the device still isn't reporting correctly, I've opened a hardware replacement ticket and scheduled a swap-out. Expect a courier within 24-48 hours. Would you like me to also activate a spare SIM in the meantime?",
+      responseAr:
+        'شكراً على التحديث. بما أن الجهاز لا يزال لا يبلّغ بشكل صحيح، فقد فتحت تذكرة لاستبدال الجهاز وحددت موعداً للتبديل. توقع وصول مندوب خلال 24-48 ساعة. هل ترغب أيضاً في تفعيل شريحة احتياطية في هذه الأثناء؟',
+      action: 'escalate',
+      actionLabel: 'Replace Device',
+      actionLabelAr: 'استبدال الجهاز',
+      quickReplies: [
+        {
+          id: 'qr-iot-fu-1',
+          label: 'Activate spare SIM',
+          labelAr: 'تفعيل شريحة احتياطية',
+          payload: 'Yes please activate a spare SIM for the failing device',
+          payloadAr: 'نعم، يرجى تفعيل شريحة احتياطية للجهاز المعطل',
+        },
+        {
+          id: 'qr-iot-fu-2',
+          label: 'Track the courier',
+          labelAr: 'تتبع المندوب',
+          payload: 'How can I track the replacement courier?',
+          payloadAr: 'كيف يمكنني تتبع مندوب الاستبدال؟',
+        },
+      ],
+    },
   },
   {
     intent: 'service_setup',
@@ -375,6 +490,31 @@ export const INTENT_RULES: IntentRule[] = [
       },
     ],
     references: [],
+    followUp: {
+      responseEn:
+        "Great. I've created the provisioning request and booked an installation slot - the team will reach out within one business day to confirm the date and site survey. Anything else I should add to the order (e.g., backup link, static IPs, managed Wi-Fi)?",
+      responseAr:
+        'ممتاز. أنشأت طلب التهيئة وحجزت موعد التركيب - سيتواصل الفريق معك خلال يوم عمل لتأكيد التاريخ ومسح الموقع. هل تود إضافة أي شيء آخر إلى الطلب (مثل خط احتياطي، عناوين IP ثابتة، واي فاي مُدار)؟',
+      action: 'solve',
+      actionLabel: 'Confirm Order',
+      actionLabelAr: 'تأكيد الطلب',
+      quickReplies: [
+        {
+          id: 'qr-setup-fu-1',
+          label: 'Add static IPs',
+          labelAr: 'إضافة عناوين IP ثابتة',
+          payload: 'Please add static IPs to the order',
+          payloadAr: 'يرجى إضافة عناوين IP ثابتة إلى الطلب',
+        },
+        {
+          id: 'qr-setup-fu-2',
+          label: 'No, that is all',
+          labelAr: 'لا، هذا كل شيء',
+          payload: "No that's all, please confirm the order",
+          payloadAr: 'لا، هذا كل شيء، يرجى تأكيد الطلب',
+        },
+      ],
+    },
   },
   {
     intent: 'agent_handoff',
@@ -568,3 +708,105 @@ export const FALLBACK_RESPONSE = {
   en: "I want to make sure I help you correctly. Could you give me a bit more detail - for example, is this about connectivity, billing, cloud, IoT, or a new service setup?",
   ar: 'أريد التأكد من مساعدتك بشكل صحيح. هل يمكنك إعطائي مزيداً من التفاصيل - على سبيل المثال، هل هذا يتعلق بالاتصال أم الفوترة أم السحابة أم إنترنت الأشياء أم إعداد خدمة جديدة؟',
 };
+
+export type SmallTalkKind = 'greeting' | 'thanks' | 'affirm' | 'deny' | 'goodbye';
+
+export interface SmallTalkRule {
+  kind: SmallTalkKind;
+  keywords: string[];
+  keywordsAr: string[];
+  responseEn: string;
+  responseAr: string;
+}
+
+export const SMALL_TALK_RULES: SmallTalkRule[] = [
+  {
+    kind: 'greeting',
+    keywords: ['hi', 'hello', 'hey', 'good morning', 'good afternoon', 'good evening', 'salam', 'salaam'],
+    keywordsAr: ['مرحبا', 'مرحباً', 'السلام عليكم', 'أهلا', 'أهلاً', 'صباح الخير', 'مساء الخير'],
+    responseEn:
+      "Hello! I'm Obat, your Ooredoo Business assistant. I can help with connectivity, billing, cloud, IoT, service setup, and more. What can I help you with today?",
+    responseAr:
+      'مرحباً! أنا أوبت، مساعدك من أوريدو للأعمال. يمكنني المساعدة في الاتصال والفوترة والسحابة وإنترنت الأشياء وإعداد الخدمات. كيف يمكنني مساعدتك اليوم؟',
+  },
+  {
+    kind: 'thanks',
+    keywords: ['thank', 'thanks', 'thx', 'appreciate', 'cheers'],
+    keywordsAr: ['شكرا', 'شكراً', 'مشكور', 'يعطيك العافية', 'تسلم'],
+    responseEn: "You're welcome! Is there anything else I can help you with?",
+    responseAr: 'العفو! هل هناك شيء آخر يمكنني مساعدتك به؟',
+  },
+  {
+    kind: 'affirm',
+    keywords: ['yes', 'yeah', 'yep', 'sure', 'ok', 'okay', 'please do', 'go ahead', 'sounds good'],
+    keywordsAr: ['نعم', 'أيوه', 'تمام', 'حسنا', 'حسناً', 'موافق', 'تفضل'],
+    responseEn:
+      "Got it - I'll proceed. Anything specific you'd like me to confirm or add before I move forward?",
+    responseAr: 'تمام - سأمضي قدماً. هل هناك شيء محدد تريد تأكيده أو إضافته قبل أن أتابع؟',
+  },
+  {
+    kind: 'deny',
+    keywords: ["no", 'nope', 'nah', "don't", 'cancel', 'not now', 'later'],
+    keywordsAr: ['لا', 'كلا', 'ليس الآن', 'لاحقا', 'لاحقاً', 'إلغاء'],
+    responseEn:
+      "No problem. I'll hold off on that. Let me know if you'd like to revisit it later or if there's anything else I can help with.",
+    responseAr: 'لا مشكلة. سأتوقف عن ذلك. أعلمني إذا أردت العودة إليه لاحقاً أو إذا كان هناك شيء آخر يمكنني مساعدتك به.',
+  },
+  {
+    kind: 'goodbye',
+    keywords: ['bye', 'goodbye', 'see you', 'later', 'that is all', "that's all"],
+    keywordsAr: ['مع السلامة', 'إلى اللقاء', 'وداعا', 'وداعاً'],
+    responseEn:
+      "Thanks for chatting with Obat. Have a great day, and reach out anytime - we're here 24/7.",
+    responseAr: 'شكراً لتواصلك مع أوبت. أتمنى لك يوماً سعيداً، وتواصل معنا في أي وقت - نحن متاحون 24/7.',
+  },
+];
+
+export const FOLLOW_UP_SIGNALS_EN: string[] = [
+  'still',
+  "didn't work",
+  'did not work',
+  "doesn't work",
+  'does not work',
+  'not working',
+  'persists',
+  'persist',
+  'no luck',
+  'no change',
+  'same problem',
+  'same issue',
+  'tried that',
+  'already tried',
+  'already did',
+  'restarted',
+  'rebooted',
+  'reset',
+  'power cycled',
+  'power-cycled',
+  'unplugged',
+  "doesn't help",
+  'no improvement',
+];
+
+export const FOLLOW_UP_SIGNALS_AR: string[] = [
+  'لا يزال',
+  'مازال',
+  'ما زال',
+  'لا تزال',
+  'لازال',
+  'لم ينجح',
+  'لم تنجح',
+  'لا يعمل',
+  'لا تعمل',
+  'مستمر',
+  'مستمرة',
+  'نفس المشكلة',
+  'جربت',
+  'حاولت',
+  'أعدت التشغيل',
+  'أعدت تشغيل',
+  'فصلت',
+  'لا فرق',
+  'لا فائدة',
+  'بدون تحسن',
+];

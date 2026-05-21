@@ -23,6 +23,7 @@ import {
 } from '../../../services/chatService';
 import type {
   ChatMessage,
+  ConversationTurn,
   IntentInfo,
   OfferSuggestion,
   QuickReply,
@@ -96,12 +97,19 @@ export function MobileChatView() {
       setIsTyping(true);
       setActiveQuickReplies([]);
 
+      const history: ConversationTurn[] = messages.map((m) => ({
+        role: m.role,
+        text: m.role === 'user' ? m.textEn : m.textEn,
+        intent: m.meta?.intent?.issueType,
+      }));
+
       try {
         const response = await sendMessage({
           text,
           language,
           sessionId: sessionIdRef.current,
           customer,
+          history,
         });
 
         setIsTyping(false);
@@ -158,7 +166,7 @@ export function MobileChatView() {
         });
       }
     },
-    [appendMessage, customer, isArabic, language],
+    [appendMessage, customer, isArabic, language, messages],
   );
 
   const handleQuickReply = (reply: QuickReply) => {
