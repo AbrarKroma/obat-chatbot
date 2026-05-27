@@ -32,5 +32,8 @@ pnpm-debug.log*
 *.tsbuildinfo
 .eslintcache
 
-# Claude Code workspace settings (preview launch config)
+# Local editor / tooling workspace settings
 .claude/
+.cursor/
+.aider*
+.continue/
