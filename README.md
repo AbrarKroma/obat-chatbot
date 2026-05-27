@@ -4,6 +4,11 @@
 > *(B2B SME AI Assistant)*. Bilingual (English / Arabic with RTL) customer-service
 > chatbot built in 24 hours.
 
+### 🚀 [**Live demo — obat-chatbot.vercel.app**](https://obat-chatbot.vercel.app)
+
+[![Live demo](https://img.shields.io/badge/🚀_Live_demo-Click_here-brightgreen?style=for-the-badge)](https://obat-chatbot.vercel.app)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed_on-Vercel-black?style=for-the-badge&logo=vercel)](https://obat-chatbot.vercel.app)
+
 A React + Vite + Tailwind front-end wired to a FastAPI / sentence-transformers
 back-end. Designed to demo Ooredoo's path to a production-grade, multilingual
 B2B support assistant on top of their existing CRM, ticket, product catalog,
@@ -12,6 +17,8 @@ and FAQ data.
 ![status](https://img.shields.io/badge/status-hackathon%20demo-red)
 ![lang](https://img.shields.io/badge/i18n-EN%20%7C%20AR%20(RTL)-blue)
 ![stack](https://img.shields.io/badge/stack-React%20%7C%20Vite%20%7C%20Tailwind-informational)
+
+> **Try it in 30 seconds:** open the live demo → tap a topic card (e.g. *Connectivity*) → switch to **Desktop** view → toggle **AR** for the RTL Arabic layout.
 
 ---
 
